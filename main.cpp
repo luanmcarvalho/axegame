@@ -1,15 +1,24 @@
 #include "raylib.h"
 
-int main ()
+int main()
 {
     // Window dimensions
     int width = 1280;
     int height = 720;
     InitWindow(width, height, "Axe Game");
 
-    //circle position
-    int circleX = width / 2;
+    // Circle position
+    int circleX = width / 4;
     int circleY = height / 2;
+
+    // Rectangle position
+    int rectX = width - 500;
+    int rectY = 50;
+
+    int direction = 10;
+
+    // Game over flag
+    bool gameOver = false;
 
     // Set our game to run at 60 frames-per-second
     SetTargetFPS(60);
@@ -18,31 +27,57 @@ int main ()
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
-        ClearBackground(RED);
+        ClearBackground(WHITE);
 
-        // Game logic begins here
-        DrawCircle(circleX, circleY, 25, BLUE);
-        if (IsKeyDown(KEY_D))
+        if (!gameOver)
         {
-            circleX += 5;
+            // Game logic begins here
+            DrawCircle(circleX, circleY, 25, BLUE);
+
+            if (IsKeyDown(KEY_D) && circleX < width - 25)
+            {
+                circleX += 5;
+            }
+
+            if (IsKeyDown(KEY_A) && circleX > 25)
+            {
+                circleX -= 5;
+            }
+
+            if (IsKeyDown(KEY_W) && circleY > 25)
+            {
+                circleY -= 5;
+            }
+
+            if (IsKeyDown(KEY_S) && circleY < height - 25)
+            {
+                circleY += 5;
+            }
+
+            DrawRectangle(rectX, rectY, 75, 75, RED);
+
+            rectY += direction;
+
+            // Check if the rectangle is out of bounds
+            if (rectY > height - 75 || rectY < 0)
+            {
+                direction = -direction;
+            }
+
+            // Check for collision
+            if (circleX + 25 > rectX && circleX - 25 < rectX + 75 &&
+                circleY + 25 > rectY && circleY - 25 < rectY + 75)
+            {
+                gameOver = true; // Set game over flag to true
+            }
+            // Game logic ends here
+        }
+        else
+        {
+            // Display "Game Over" message
+            DrawText("Game Over", width / 2 - 50, height / 2, 20, BLACK);
         }
 
-        if (IsKeyDown(KEY_A))
-        {
-            circleX -= 5;
-        }
-
-        if (IsKeyDown(KEY_W))
-        {
-            circleY -= 5;
-        }
-
-        if (IsKeyDown(KEY_S))
-        {
-            circleY += 5;
-        }
-
-        // Game logic ends here
         EndDrawing();
     }
 }
