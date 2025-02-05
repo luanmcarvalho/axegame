@@ -19,6 +19,7 @@ int main()
 
     // Game over flag
     bool gameOver = false;
+    bool win = false;
 
     // Set our game to run at 60 frames-per-second
     SetTargetFPS(60);
@@ -29,7 +30,7 @@ int main()
         BeginDrawing();
         ClearBackground(WHITE);
 
-        if (!gameOver)
+        if (!gameOver && !win)
         {
             // Game logic begins here
             DrawCircle(circleX, circleY, 25, BLUE);
@@ -70,14 +71,23 @@ int main()
             {
                 gameOver = true; // Set game over flag to true
             }
+
+            if (circleX > rectX + 75)
+            {
+            win = true;
+            }
             // Game logic ends here
         }
-        else
+        if (gameOver)
         {
-            // Display "Game Over" message
-            DrawText("Game Over", width / 2 - 50, height / 2, 20, BLACK);
+            DrawText("Game Over!", width / 2 - 100, height / 2 - 10, 20, RED);
         }
-
+        if (win)
+        {
+        DrawText("You Win!", width / 2 - 100, height / 2 - 10, 20, GREEN);
+        }
         EndDrawing();
     }
+
+    CloseWindow(); // Close window and OpenGL context
 }
